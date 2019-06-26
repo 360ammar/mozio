@@ -54,7 +54,7 @@ type Props = {
 }
 
 const handleAutoComplete = ({target},getName) => {
-//  getName(target.value, target.name)
+ getName(target.value, target.name)
 } 
 
 const AutoComplete: React$ComponentType<Props> = ({
