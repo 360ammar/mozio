@@ -1,0 +1,24 @@
+[ignore]
+.*/node_modules/.*
+.*/dist/.*
+.*/flow-typed/.*
+.*/.vscode/.*
+.*/webpack.config.js
+.*/__tests__/.*
+
+[include]
+
+[libs]
+flow-typed
+
+[lints]
+deprecated-utility=off
+
+[options]
+all=true
+module.system.node.resolve_dirname=node_modules
+module.system.node.resolve_dirname=src
+module.name_mapper='^Components\(.*\)$' -> '<PROJECT_ROOT>/src/Components/\1'
+module.name_mapper='^Redux\(.*\)$' -> '<PROJECT_ROOT>/src/Redux/\1'
+
+[strict]

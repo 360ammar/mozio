@@ -1,0 +1,44 @@
+{
+  "name": "mozio-project",
+  "version": "1.0.0",
+  "description": "This is a Project for Mozio Front-end Developer hiring.",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run flow && npm run dev",
+    "flow": "flow",
+    "dev": "webpack-dev-server --open",
+    "dist": "webpack --open",
+    "test": "jest --watchAll"
+  },
+  "author": "Ammar Rashad Mirza",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.19.0",
+    "query-string": "^6.8.1",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-hook-form": "^3.13.1",
+    "react-redux": "^7.1.0",
+    "react-router-dom": "^5.0.1",
+    "redux": "^4.0.1",
+    "redux-thunk": "^2.3.0",
+    "styled-components": "^4.3.2",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-flow": "^7.0.0",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.6",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.14.0",
+    "flow-bin": "^0.101.1",
+    "jest": "^24.8.0",
+    "jest-cli": "^24.8.0",
+    "redux-devtools-extension": "^2.13.8",
+    "webpack": "^4.35.0",
+    "webpack-cli": "^3.3.4",
+    "webpack-dev-server": "^3.7.2"
+  }
+}
