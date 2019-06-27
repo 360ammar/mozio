@@ -4,6 +4,7 @@ import styled from 'styled-components'
 
 const StyledButton = styled.button`
   color: #ffffff;
+  position: relative;
   background-color: #f6b900;
   border: 1px solid transparent;
   letter-spacing: 1px;

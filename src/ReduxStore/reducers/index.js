@@ -5,12 +5,12 @@ import { State, Action } from 'react-redux'
 
 function travelData(state: State = {
   fetchingLocations : false,
-  fetchingLocationErr: {},
+  fetchingLocationErr: '',
   locations: [],
 
    fetchingDistance : false,
   fetchingDistanceErr: {},
-  Distance: []
+  distance: {}
 }, action: Action) {
   switch (action.type) {
     case constants.GET_NAME_REQUEST:
@@ -23,7 +23,7 @@ function travelData(state: State = {
       return {
         ...state,
         fetchingLocations: false,
-        locations: action.locations.locations,
+        locations: action.locations.predictions,
         context: action.locations.context
       }
 
@@ -53,7 +53,12 @@ function travelData(state: State = {
         ...state,
         fetchingDistance: false,
         fetchingDistanceErr: action.err
-      }  
+      } 
+    case "UPDATE_CONTEXT":
+      return {
+        ...state,
+        context: ''
+      }   
 
     default:
       return state;

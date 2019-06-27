@@ -1,5 +1,6 @@
 import * as React from 'react'
 import queryString from 'query-string'
+import {Container} from '../Components'
 
 
 export default class SearhPage extends React.Component<any> {
@@ -8,15 +9,19 @@ export default class SearhPage extends React.Component<any> {
         let origin = ''
         let destination = ''
         let distance = ''
+        let date = ''
+        let passengers = ''
         if (search) {
         const qs = queryString.parse(search)
         if(qs){
            origin = qs.origin
            destination = qs.destination
            distance = qs.distance
+           date = qs.date
+           passengers = qs.passengers          
         }
       }
 
-      return <div style={{marginTop: '50px'}}>The distance between {origin} and {destination} is {distance}</div>
+      return <Container><div style={{marginTop: '50px'}}>The distance between {origin} and {destination} is {distance}KM you are leaving with {passengers} passengers on {date}.</div></Container>
   }
 }

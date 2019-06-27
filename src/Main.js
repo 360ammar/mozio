@@ -4,7 +4,7 @@ import * as React from 'react'
 import { Home, SearchPage } from './Containers'
 import { Container, NavBar } from './Components'
 import { createGlobalStyle } from 'styled-components'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Switch, withRouter } from 'react-router-dom'
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -13,7 +13,7 @@ const GlobalStyle = createGlobalStyle`
   }
 `
 
-export default class Main extends React.Component<any> {
+class Main extends React.Component<any> {
   render(): React.Node {
     return (
       <React.Fragment>
@@ -28,3 +28,5 @@ export default class Main extends React.Component<any> {
     )
   }
 }
+
+export default withRouter(Main)

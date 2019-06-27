@@ -2,7 +2,7 @@
 
 import React from 'react'
 import styled from 'styled-components'
-import { AutoComplete, Input, Button } from '.'
+import { AutoComplete, Input, Button, Spinner } from '.'
 import useForm from 'react-hook-form'
 import queryString from 'query-string'
 
@@ -32,6 +32,11 @@ const Error = styled.div`
   font-size: 12px;
   color: #d8000c;
 `
+const StyledSpinner = styled.div`
+  position: absolute;
+  right: 6px;
+  top: 7px;
+`
 
 type Props = {
   search?: string,
@@ -42,21 +47,27 @@ const Search: React$ComponentType<Props> = ({
   search,
   getName,
   state,
-  calculateDistance
+  calculateDistance,
+  updateContext
 }) => {
-  const { register, handleSubmit, errors } = useForm()
+  const { register, handleSubmit, errors, setValue } = useForm()
   if (search) {
     const qs = queryString.parse(search)
     console.log(search, qs)
   }
 
   const onSubmit = data => {
-    calculateDistance(data.distanceFrom, data.distanceTo)
+    calculateDistance({
+      origin: data.distanceFrom,
+      destination: data.distanceTo,
+      date: data.date,
+      passengers: data.passengers
+    })
   }
 
   return (
     <SearchBox>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
         <StyledFieldSet>
           <StyledLegend>Calculate Distance:</StyledLegend>
           <AutoComplete
@@ -66,6 +77,8 @@ const Search: React$ComponentType<Props> = ({
             ref={register({ required: true })}
             getName={getName}
             state={state}
+            setValue={setValue}
+            updateContext={updateContext}
           />
           <Error>{errors.distanceFrom && 'Distance From is required.'}</Error>
           <AutoComplete
@@ -75,6 +88,8 @@ const Search: React$ComponentType<Props> = ({
             ref={register({ required: true })}
             getName={getName}
             state={state}
+            setValue={setValue}
+            updateContext={updateContext}
           />
           <Error>{errors.distanceTo && 'Distance To is required.'}</Error>
           <Input
@@ -94,7 +109,10 @@ const Search: React$ComponentType<Props> = ({
             ref={register({ required: true })}
           />
           <Error>{errors.passengers && 'No of Passengers is required.'}</Error>
-          <Button type='submit'>Search Distance</Button>
+          <Button type='submit'>Search Distance  {state.fetchingDistance && <StyledSpinner>
+            <Spinner size={25} color="#fff" />
+          </StyledSpinner> }</Button>
+         
         </StyledFieldSet>
       </form>
     </SearchBox>

@@ -50,12 +50,13 @@ type Props = {
   loading?: boolean,
   forwardRef?: (el: any) => void,
   getName: (name: string, context: string) => void,
+  setValue: (field: string, value: string) => void,
   state: Object
 }
 
-const handleAutoComplete = ({target},getName) => {
-//  getName(target.value, target.name)
-} 
+const handleAutoComplete = ({ target }, getName) => {
+  getName(target.value, target.name)
+}
 
 const AutoComplete: React$ComponentType<Props> = ({
   name,
@@ -64,7 +65,9 @@ const AutoComplete: React$ComponentType<Props> = ({
   loading,
   forwardRef,
   getName,
-  state
+  state,
+  updateContext,
+  setValue
 }) => (
   <StyledDiv>
     <Label>{label}</Label>
@@ -73,23 +76,33 @@ const AutoComplete: React$ComponentType<Props> = ({
       ref={forwardRef}
       name={name}
       placeholder={placeholder}
-      onChange={e => handleAutoComplete(e,getName)}
+      onChange={e => handleAutoComplete(e, getName)}
     />
-    {loading && (
+    {state.fetchingLocations && (
       <StyledSpinner>
         <Spinner size={25} />
       </StyledSpinner>
     )}
-   {state.context === name && <AutoCompleteList>
-     { 
-       state.locations.map(location => { 
-         return <AutoCompleteItem>
+    {state.context === name && (
+      <AutoCompleteList>
+        {state.locations.map(location => (
+          <AutoCompleteItem
+            key={`${location}-key`}
+            onClick={() => {
+              setValue(name, location)
+              updateContext()
+            }}
+          >
             {location}
-        </AutoCompleteItem> 
-       })
-     }
-       
-   </AutoCompleteList> }
+          </AutoCompleteItem>
+        ))}
+      </AutoCompleteList>
+    )}
+    {status.fetchingLocationErr && (
+      <AutoCompleteList>
+        <AutoCompleteItem>An unknown error occured!</AutoCompleteItem>
+      </AutoCompleteList>
+    )}
   </StyledDiv>
 )
 

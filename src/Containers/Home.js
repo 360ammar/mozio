@@ -5,10 +5,12 @@ import { connect, Dispatch } from 'react-redux'
 import { actions } from '../ReduxStore'
 
 class Home extends React.Component<any> {
-  componentDidMount() {}
 
-  componentDidCatch(err) {
-    console.log(err)
+  componentDidUpdate(prevProps){
+    if(prevProps.state.fetchingDistance && Object.keys(this.props.state.distance).length > 0){
+      const { history: {push}, state: {distance : { origin, destination, date, passengers, distance }} } = this.props
+      push(`/search?origin=${origin}&destination=${destination}&distance=${distance}&date=${date}&passengers=${passengers}`)
+    }
   }
 
   render(): React.Node {
@@ -16,7 +18,8 @@ class Home extends React.Component<any> {
       location: { search },
       getName,
       state,
-      calculateDistance
+      calculateDistance,
+      updateContext
     } = this.props
     return (
       <React.Fragment>
@@ -27,6 +30,7 @@ class Home extends React.Component<any> {
             search={search}
             state={state}
             calculateDistance={calculateDistance}
+            updateContext={updateContext}
           />
         </Container>
       </React.Fragment>
@@ -45,6 +49,9 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
     },
     calculateDistance: (origin, destination) => {
       dispatch(actions.calculateDistance(origin, destination))
+    },
+    updateContext: () => {
+      dispatch(actions.updateContext())
     }
   }
 }

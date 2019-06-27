@@ -1,43 +1,38 @@
 // const uuidv4 = require('uuid/v4');
 import { constants } from '../constants'
 import { Dispatch } from 'react-redux'
-import uuid from 'uuid/v4'
 import axios from 'axios'
-
-const SECRET = 'AIzaSyCFJzMTvQ5af42sZUEQf3ZINgOp3uVQ0eo'
+import data from '../../data/countries.json'
 
 const getName = (name: string, context: string) => {
-  let uid = uuid()
   const request = () => ({ type: constants.GET_NAME_REQUEST })
   const success = locations => ({ type: constants.GET_NAME_SUCCESS, locations })
   const failure = err => ({ type: constants.GET_NAME_FAILURE, err })
 
   return (dispatch: Dispatch) => {
     dispatch(request())
-    axios
-      .get(
-        `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${name}&types=(cities)&key=${SECRET}&sessiontoken=${uid}`,
-        { crossdomain: true }
+    let result = data.filter(country => country.name.includes(name))
+    if (result.length > 0) {
+      return dispatch(
+        success({
+          predictions:
+            name.length > 1 ? result.map(location => location.name) : [],
+          context
+        })
       )
-      .then((data, { data: { predictions } }) => {
-        console.log(data)
-        if (predictions.length > 0)
-          return dispatch(
-            success({
-              predictions: predictions.map(location => location.description),
-              context
-            })
-          )
-        return dispatch(success({ predictions, context }))
-      })
-      .catch(err => {
-        return dispatch(failure(err))
-      })
+    } else {
+      return dispatch(failure('No Results found!'))
+    }
   }
 }
 
-const calculateDistance = (origin: string, destination: string) => {
-  let uid = uuid()
+const updateContext = (context: string) => {
+  return (dispatch: Dispatch) => {
+    return dispatch({ type: 'UPDATE_CONTEXT' })
+  }
+}
+
+const calculateDistance = ({ origin, destination, date, passengers }) => {
   const request = () => ({ type: constants.GET_DISTANCE_REQUEST })
   const success = distance => ({
     type: constants.GET_DISTANCE_SUCCESS,
@@ -49,21 +44,14 @@ const calculateDistance = (origin: string, destination: string) => {
     dispatch(request())
     axios
       .get(
-        `https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins=${origin}&destinations=${destination}&key=${SECRET}`,
+        `https://www.distance24.org/route.json?stops=${origin}|${destination}`,
         { crossdomain: true }
       )
-      .then(({ data: { rows } }) => {
-        if (rows && rows.length > 0) {
-          if (rows[0].elements && rows[0].elements.length > 0) {
-            window.location.push(
-              `/search?origin=${origin}&destination=${destination}&distance=${
-                rows[0].elements[0].distance['text']
-              }`
-            )
-          }
-        }
-
-        return dispatch(success(rows))
+      .then(({ data }) => {
+        const { distance } = data
+        return dispatch(
+          success({ origin, destination, date, passengers, distance })
+        )
       })
       .catch(err => {
         return dispatch(failure(err))
@@ -73,5 +61,6 @@ const calculateDistance = (origin: string, destination: string) => {
 
 export const actions = {
   getName,
-  calculateDistance
+  calculateDistance,
+  updateContext
 }
